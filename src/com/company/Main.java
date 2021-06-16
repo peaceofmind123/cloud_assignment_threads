@@ -24,5 +24,16 @@ public class Main {
         catch(Exception e) {
             System.out.println(e.toString());
         }
+
+        System.out.println("Pooled Parallel version");
+
+        try {
+            ParallelizedMatProduct p = new ParallelizedMatProduct(matA, matB);
+            double[][] result = p.pooledParallelCompute(9);
+            SequentialMatProduct.printMat(result);
+        }
+        catch(Exception e) {
+            System.out.println(e.toString());
+        }
     }
 }

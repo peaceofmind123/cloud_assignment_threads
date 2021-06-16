@@ -2,6 +2,8 @@ package com.company;
 
 
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class ParallelizedMatProduct {
 
@@ -56,8 +58,22 @@ public class ParallelizedMatProduct {
 
     }
 
-    public double[][] pooledParallelCompute() {
-        // todo: replace with actual code
-        return new double[1][1];
+    public double[][] pooledParallelCompute(int numThreads) {
+        ExecutorService executorService = Executors.newFixedThreadPool(numThreads);
+        for (int i = 0; i < rowsA; i++) {
+            for (int j = 0; j < colsB; j++) {
+                try {
+                    Runnable worker = new Worker(matA, matB,result, i,j, new CountDownLatch(100));
+                    executorService.execute(worker);
+                }
+                catch(Exception e) {
+                    System.out.println(e.toString());
+                }
+
+            }
+        }
+        executorService.shutdown();
+        while (!executorService.isTerminated()) {   }
+        return result;
     }
 }
